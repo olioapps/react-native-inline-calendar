@@ -111,6 +111,9 @@ class Calendar extends React.Component {
      * @default defaultEmptyListRenderer
      */
     emptyListRenderer: PropTypes.func,
+
+    headerRenderer: PropTypes.func,
+
     /**
      * Renderer for agenda items for selected date
      * @param dayEvents
@@ -217,9 +220,18 @@ class Calendar extends React.Component {
   }
 
   renderHeader(currentDate) {
+    const { headerRenderer } = this.props
+    if (headerRenderer) {
+      return headerRenderer(
+        this.prevMonth,
+        this.nextMonth,
+        currentDate || this.state.currentDate
+      )
+    }
+
     const showArrows = !this.state.scrollable && this.state.showArrows;
-    const prevArrow = this.props.prevArrow || <Text>{'<'}</Text>
-    const nextArrow = this.props.nextArrow || <Text>{'>'}</Text>
+    const prevArrow = this.props.prevArrow || <Text>{'<<'}</Text>
+    const nextArrow = this.props.nextArrow || <Text>{'>>'}</Text>
     return <View style={{flexDirection: 'row'}}>
       {showArrows && <TouchableHighlight onPress={this.prevMonth} style={styles.headerNavigation}>{prevArrow}</TouchableHighlight>}
       <Text style={styles.headerTitle}>{dateFns.format(currentDate || this.state.currentDate, this.state.headerDateFormat)}</Text>
